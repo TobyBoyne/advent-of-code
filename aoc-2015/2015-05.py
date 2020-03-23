@@ -6,7 +6,7 @@ def read_input():
 
 	return strings
 
-def nice_string(s):
+def nice_string1(s):
 	vowel_count = 0
 	letter_repeat = False
 	for i, c in enumerate(s):
@@ -19,8 +19,29 @@ def nice_string(s):
 
 	return vowel_count >= 3 and letter_repeat
 
+def nice_string2(s):
+	pairs = {}
+	repeated_pair = False
+	sandwich = False
+	for i, c in enumerate(s):
+		if i < len(s) - 2 and s[i + 2] == c:
+			sandwich = True
+		p = s[i:i+2]
+		if p in pairs:
+			if pairs[p] < i - 1:
+				repeated_pair = True
+		else:
+			pairs[p] = i
+
+	return repeated_pair and sandwich
+
+
 def part_one(strings):
-	return sum(nice_string(s) for s in strings)
+	return sum(nice_string1(s) for s in strings)
+
+def part_two(strings):
+	return sum(nice_string2(s) for s in strings)
 
 strings = read_input()
 print(part_one(strings))
+print(part_two(strings))
