@@ -20,5 +20,21 @@ def part_one(move_list):
 
 	return len(houses)
 
+def part_two(move_list):
+	santa = 0 + 0j
+	robo_santa = 0 + 0j
+	houses = {0 + 0j}
+	for i, m in enumerate(move_list):
+		if i % 2:
+			santa += moves[m]
+			houses.add(santa)
+		else:
+			robo_santa += moves[m]
+			houses.add(robo_santa)
+
+	return len(houses)
+
+
 move_list = read_input()
 print(part_one(move_list))
+print(part_two(move_list))
