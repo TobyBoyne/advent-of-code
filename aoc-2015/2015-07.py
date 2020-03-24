@@ -24,7 +24,7 @@ def read_input():
 	return instructions
 
 
-def part_one(instructions):
+def part_one(instructions, initial=None):
 	wires = {}
 	wires_with_values = set()
 	# compile all instructions
@@ -34,6 +34,10 @@ def part_one(instructions):
 		if operation == "SET" and inputs[0].isnumeric():
 			wires[output] = int(inputs[0])
 			wires_with_values.add(output)
+
+	# used for part two, initial value of b
+	if initial:
+		wires['b'] = initial
 
 	# repeatedly go through all wires until every wire has been assigned a value
 	while len(wires) != len(wires_with_values):
@@ -48,7 +52,13 @@ def part_one(instructions):
 
 	return wires['a']
 
+def part_two(instructions):
+	b_initial_value = part_one(instructions)
+	a_final_value = part_one(instructions, initial=b_initial_value)
+
+	return a_final_value
 
 
 instructions = read_input()
 print(part_one(instructions))
+print(part_two(instructions))
