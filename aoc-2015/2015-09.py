@@ -32,7 +32,7 @@ def read_file():
 	return distances, locations
 
 
-def part_one(distances, locations):
+def find_path(distances, locations):
 	paths = []
 	for p in permutations(locations.values()):
 		if p[::-1] not in paths:
@@ -43,13 +43,15 @@ def part_one(distances, locations):
 		path_length = 0
 		for i, j in pairwise(path):
 			path_length += distances[i, j]
-		lengths.append((path_length, path))
+		lengths.append(int(path_length))
 
-	loc_from_num = {v: k for k, v in locations.items()}
-	shortest_length, shortest_num_path = min(lengths, key=lambda x: x[0])
-	print([loc_from_num[i] for i in shortest_num_path])
-	return shortest_length
+	shortest_length = min(lengths)
+	longest_length = max(lengths)
+
+	return shortest_length, longest_length
 
 
 distances, locations = read_file()
-print(part_one(distances, locations))
+shortest, longest = find_path(distances, locations)
+print(shortest)
+print(longest)
