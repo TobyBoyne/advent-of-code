@@ -9,6 +9,12 @@ def part_one(n):
 
 	return len(n)
 
+def part_two(n):
+	for i in range(50):
+		n = S(n)
+
+	return len(n)
 
 puzz_input = "1113122113"
 print(part_one(puzz_input))
+print(part_two(puzz_input))
