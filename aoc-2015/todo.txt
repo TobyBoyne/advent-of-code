@@ -1,0 +1,4 @@
+TODO:
+ - Day 10: only find length of look and say to make more efficient
+ - Day 11: skip directly so that not every solution must be tested (e.g. set unit to be equal to tens, carry on from
+ there - last letters will be in ascending order)
