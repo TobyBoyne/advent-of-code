@@ -37,15 +37,25 @@ class Password:
 
 		return len(unique_pairs) >= 2 and straight_count >= 1
 
-	def __repr__(self):
+
+	def as_string(self):
 		return "".join(chr(c) for c in self.pass_arr + 97)
 
+	def __repr__(self):
+		return self.as_string()
 
-def part_one(old_pass_str):
+
+def find_new_password(old_pass_str):
 	password = Password(old_pass_str)
+	password.increment()
 	password.next_valid_password()
-	print(password)
+	return password.as_string()
+
 
 
 old_password = "vzbxkghb"
-part_one(old_password)
+new_password_1 = find_new_password(old_password)
+new_password_2 = find_new_password(new_password_1)
+
+print("Part one", new_password_1)
+print("Part two", new_password_2)
