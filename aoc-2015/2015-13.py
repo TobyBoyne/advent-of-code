@@ -32,7 +32,7 @@ def pairings(arrangement):
 
 def part_one(happiness_matrix):
 	arrangements = []
-	for perm in permutations(range(len(happiness_matrix))):
+	for perm in permutations(range(happiness_matrix.shape[0])):
 		# only add if Alice is the first; removes repeats of cycle as order does not matter
 		if perm[0] == 0 and perm[::-1] not in arrangements:
 			arrangements.append(perm)
@@ -47,5 +47,13 @@ def part_one(happiness_matrix):
 
 	return max(all_happiness)
 
-happiness = read_file()
-print(part_one(happiness))
+def part_two(happiness_matrix):
+	N = happiness_matrix.shape[0]
+	new_matrix = np.zeros((N+1, N+1))
+	new_matrix[:N, :N] = happiness_matrix
+
+	return part_one(new_matrix)
+
+happiness_matrix = read_file()
+print(part_one(happiness_matrix))
+print(part_two(happiness_matrix))
