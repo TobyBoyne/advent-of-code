@@ -11,13 +11,13 @@ def read_input():
 			_, speed, up_time, down_time = p.fixed
 			speeds[i, :] = [speed, up_time, up_time+down_time]
 
-	print(speeds)
 	return speeds
 
 def add_speeds(speeds, t):
 	moves_this_turn = (t % speeds[:, 2]) < speeds[:, 1]
 	distance_moved = speeds[:, 0] * moves_this_turn
 	return distance_moved
+
 
 def part_one(speeds, T):
 	N = speeds.shape[0]
@@ -27,7 +27,19 @@ def part_one(speeds, T):
 
 	return max(distances)
 
+def part_two(speeds, T):
+	N = speeds.shape[0]
+	distances = np.zeros(N)
+	scores = np.zeros(N)
+	for t in range(T):
+		distances += add_speeds(speeds, t)
+		winning_distance = np.amax(distances)
+		first_places = np.argwhere(distances == winning_distance)
+		scores[first_places] += 1
+
+	return max(scores)
 
 speeds = read_input()
 T = 2503
 print(part_one(speeds, T))
+print(part_two(speeds, T))
