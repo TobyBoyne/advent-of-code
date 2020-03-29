@@ -38,5 +38,24 @@ def part_one(sue_details):
 
 	return -1
 
+def part_two(sue_details):
+	for i, details in enumerate(sue_details):
+		real_sue = True
+		for d, v in details.items():
+			if d in ("cats", "trees"):
+				if v <= compounds[d]:
+					real_sue = False
+			elif d in ("pomeranians", "goldfish"):
+				if v >= compounds[d]:
+					real_sue = False
+			elif v != compounds[d]:
+				real_sue = False
+		if real_sue:
+			return i + 1
+
+	return -1
+
+
 sue_details = read_input()
 print(part_one(sue_details))
+print(part_two(sue_details))
