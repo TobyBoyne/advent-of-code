@@ -18,6 +18,7 @@ class Item:
 	def __add__(self, other):
 		return Item(self.cost+other.cost, self.dmg_bonus+other.dmg_bonus, self.armour_bonus+other.armour_bonus)
 
+
 def armour_needed_given_dmg(boss, player, dmg):
 	for i in range(10):
 		test_player = Character(player.hp, dmg, i)
@@ -25,7 +26,7 @@ def armour_needed_given_dmg(boss, player, dmg):
 			return i
 	return -1
 
-def all_combinations(weapons, armours, rings):
+def all_combinations(weapons, armours, rings, func=min):
 	combs = {}
 	for w in weapons:
 		for a in armours:
@@ -33,7 +34,7 @@ def all_combinations(weapons, armours, rings):
 				total_item = sum((w, a, r1, r2), Item())
 				dmg, armour, cost = total_item.dmg_bonus, total_item.armour_bonus, total_item.cost
 				if (dmg, armour) in combs:
-					cost = min(combs[(dmg, armour)], cost)
+					cost = func(combs[(dmg, armour)], cost)
 				combs[(dmg, armour)] = cost
 	return combs
 
@@ -51,6 +52,19 @@ def part_one(boss, player, all_combs):
 
 	return min_cost
 
+def part_two(boss, player, all_combs):
+	dmg_armour_dict = {}
+	for dmg in range(4, 14):
+		armour = armour_needed_given_dmg(boss, player, dmg) - 1
+		if armour not in dmg_armour_dict.values():
+			dmg_armour_dict[dmg] = armour
+
+	max_cost = 0
+	for stats in dmg_armour_dict.items():
+		if stats in all_combs:
+			max_cost = max(max_cost, all_combs[(stats)])
+	return max_cost
+
 
 
 boss = Character(hp=100, dmg=8, armour=2)
@@ -61,5 +75,8 @@ weapons = [Item(8, 4, 0), Item(10, 5, 0), Item(25, 6, 0), Item(40, 7, 0), Item(7
 armours = [Item(13, 0, 1), Item(31, 0, 2), Item(53, 0, 3), Item(75, 0, 4), Item(102, 0, 5), Item()]
 rings = [Item(25, 1, 0), Item(50, 2, 0), Item(100, 3, 0), Item(20, 0, 1), Item(40, 0, 2), Item(80, 0, 3), Item(), Item()]
 all_items = (weapons, armours, rings)
-all_combs = all_combinations(*all_items)
+all_combs = all_combinations(*all_items, func=min)
+all_combs_expensive = all_combinations(*all_items, func=max)
+
 print(part_one(boss, player, all_combs))
+print(part_two(boss, player, all_combs_expensive))
