@@ -30,5 +30,17 @@ def part_one(lights):
 		lights = animate(lights)
 	return np.count_nonzero(lights)
 
+def part_two(lights):
+	corners = ((0, 0), (0, -1), (-1, -1), (-1, 0))
+	for c in corners:
+		lights[c] = 1
+
+	for i in range(100):
+		lights = animate(lights)
+		for c in corners:
+			lights[c] = 1
+	return np.count_nonzero(lights)
+
 lights = read_input()
 print(part_one(lights))
+print(part_two(lights))
