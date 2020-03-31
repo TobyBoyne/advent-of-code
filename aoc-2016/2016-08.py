@@ -1,5 +1,6 @@
 from parse import parse
 import numpy as np
+import matplotlib.pyplot as plt
 
 def read_input():
 	with open("day08.txt") as f:
@@ -16,7 +17,7 @@ def read_input():
 
 	return instr
 
-def part_one(instructions):
+def get_final_display(instructions):
 	screen = np.zeros((6, 50))
 	for command, A, B in instructions:
 		if command == "rect":
@@ -25,8 +26,17 @@ def part_one(instructions):
 			screen[:, A] = np.roll(screen[:, A], B)
 		elif command == "row":
 			screen[A, :] = np.roll(screen[A, :], B)
+	return screen
+
+def part_one(screen):
 	return np.count_nonzero(screen)
+
+def part_two(screen):
+	plt.imshow(screen)
+	plt.show()
 
 
 instructions = read_input()
-print(part_one(instructions))
+screen = get_final_display(instructions)
+print(part_one(screen))
+part_two(screen)
