@@ -1,5 +1,6 @@
 from parse import parse
 from collections import defaultdict
+from copy import deepcopy
 
 def read_input():
 	with open("day10.txt") as f:
@@ -17,12 +18,11 @@ def read_input():
 
 	return bots_values, comparisons
 
-
-def part_one(bots, comparisons):
+def run_bots(bots, comparisons, stop_at=None):
 	outputs = {}
 	next_bots = {b for b in bots if len(bots[b]) == 2}
 
-	while ([17, 61] not in bots.values()) and ([61, 17] not in bots.values()):
+	while next_bots:
 		cur_bots = {b for b in next_bots if len(bots[b]) == 2}
 		next_bots = set()
 		for bot in cur_bots:
@@ -32,13 +32,25 @@ def part_one(bots, comparisons):
 				v = bot_values[i]
 				if is_bot == 'bot':
 					bots[num].append(v)
+					if stop_at and set(bots[num]) == stop_at:
+						return num
 					next_bots.add(num)
 				else:
 					outputs[num] = v
 			bots[bot] = []
 
-	bot_with_target_pair = [b for b, v in bots.items() if {17, 61}.issubset(v)][0]
+	return bots, outputs
+
+
+def part_one(bots, comparisons):
+	# deepcopy means that values are not copied between parts one and two
+	bot_with_target_pair = run_bots(deepcopy(bots), comparisons, stop_at={61, 17})
 	return bot_with_target_pair
+
+def part_two(bots, comparisons):
+	_, outputs = run_bots(deepcopy(bots), comparisons)
+	return outputs[0] * outputs[1] * outputs[2]
 
 instructions = read_input()
 print(part_one(*instructions))
+print(part_two(*instructions))
