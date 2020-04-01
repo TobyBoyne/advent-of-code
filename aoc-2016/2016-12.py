@@ -15,8 +15,9 @@ def as_value(registers, value):
 	return out
 
 
-def part_one(instructions):
+def run_instructions(instructions, initial_c=0):
 	registers = {r: 0 for r in 'abcd'}
+	registers['c'] = initial_c
 	i = 0
 	while i < len(instructions):
 		op, x, *y = instructions[i]
@@ -36,6 +37,11 @@ def part_one(instructions):
 		print(registers)
 	return registers
 
+def part_one(instructions):
+	return run_instructions(instructions)['a']
+
+def part_two_slow(instructions):
+	return run_instructions(instructions, initial_c=1)['a']
 
 instructions = read_input()
 print(part_one(instructions))
