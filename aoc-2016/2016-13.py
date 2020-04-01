@@ -18,7 +18,8 @@ def adjacent_tiles(x, y, max_x, max_y):
 			yield new_x, new_y
 
 def distance_to_points(grid, start=(1, 1)):
-	distance_grid = np.full_like(grid, -1, dtype=int)
+	distance_grid = np.full_like(grid, np.inf, dtype=float)
+	distance_grid[start] = 0
 	new_points = [start]
 	num_steps = 0
 	while new_points:
@@ -27,7 +28,7 @@ def distance_to_points(grid, start=(1, 1)):
 		new_points = []
 		for (x, y) in cur_points:
 			for new_x, new_y in adjacent_tiles(x, y, 50, 50):
-				if grid[new_y, new_x] and distance_grid[new_y, new_x] == -1:
+				if grid[new_y, new_x] and distance_grid[new_y, new_x] == np.inf:
 					distance_grid[new_y, new_x] = num_steps
 					new_points.append((new_x, new_y))
 
@@ -36,6 +37,13 @@ def distance_to_points(grid, start=(1, 1)):
 def part_one():
 	grid = np.array([[is_open(x, y) for x in range(50)] for y in range(50)])
 	distance_grid = distance_to_points(grid)
+
 	return distance_grid[39, 31]
 
+def part_two():
+	grid = np.array([[is_open(x, y) for x in range(50)] for y in range(50)])
+	distance_grid = distance_to_points(grid)
+	return np.count_nonzero(distance_grid <= 50)
+
 print(part_one())
+print(part_two())
