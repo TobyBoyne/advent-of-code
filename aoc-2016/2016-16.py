@@ -25,3 +25,4 @@ def part_one(initial_state, disk_size):
 
 puzz_input = "01110110101001000"
 print(part_one(puzz_input, 272))
+print(part_one(puzz_input, 35651584))
