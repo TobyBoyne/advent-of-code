@@ -1,29 +1,6 @@
 import numpy as np
 from parse import parse
-
-# x = np.array([
-# 	[1, 2],
-# 	[3, 4]
-# ])
-#
-# y = np.array([5, 6])
-# print(x * y)
-# print(x.dot(y))
-#
-#
-# a = np.array([1, 1, 1])
-# b = np.array([
-# 	[1, 2],
-# 	[3, 4],
-# 	[5, 6]
-# ])
-# print(a.dot(b))
-
-MOVES = np.array([
-	[1, 0, 0, -1],
-	[0, 1, 0, -1],
-	[0, 0, 1, -1]
-])
+from itertools import combinations
 
 
 def read_input():
@@ -38,11 +15,6 @@ def read_input():
 			ingr_values[:, i] = values
 	return ingr_values
 
-def gen_steps(amnts):
-	for move in MOVES:
-		for i in range(-10, 10):
-			yield amnts + i * move
-
 
 def score(M, amnts):
 	scores = M.dot(amnts)
@@ -50,27 +22,31 @@ def score(M, amnts):
 		return 0
 	return np.prod(scores)
 
-def part_one(ingr_values):
-	"""Using Matrix algebra
-	M . [a1, a2, ..., an] = [cap, dur, flav, texture], where a is the number of teaspoons"""
 
+def find_best_scores(nigr_values, limit_calories=500):
 	num_ingredients = ingr_values.shape[1]
 	amnts = np.ones(num_ingredients) * 100 / num_ingredients
 	M = ingr_values[:-1, :]
+	calories = ingr_values[-1, :]
+	calories_scores = set()
 
 	print("Initial score", score(M, amnts))
+	highest_score = 0
+	highest_calories_score = 0
+	for (a, b, c) in combinations(np.arange(101), 3):
+		amnts = np.array([a, b - a, c - b, 100 - c])
 
-	for i in range(100):
-		highest_score = 0
-		best_move = amnts
-		for move in gen_steps(amnts):
-			if (move_score := score(M, move)) > highest_score:
-				highest_score = move_score
-				best_move = move
+		if (move_score := score(M, amnts)) > highest_score:
+			highest_score = move_score
+			best_move = amnts
 
-		amnts = best_move
-	print("Best score", score(M, amnts))
-	return amnts
+		if limit_calories and calories.dot(amnts) == limit_calories:
+			if (move_score := score(M, amnts)) > highest_calories_score:
+				highest_calories_score = move_score
+
+	return highest_score, highest_calories_score
 
 ingr_values = read_input()
-print(part_one(ingr_values))
+highest_score, highest_calories_score = find_best_scores(ingr_values, limit_calories=500)
+print("Part one", highest_score)
+print("Part two", highest_calories_score)
