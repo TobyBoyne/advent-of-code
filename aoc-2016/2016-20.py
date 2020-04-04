@@ -9,6 +9,11 @@ def read_input():
 			ip_ranges.append(p.fixed)
 	return list(sorted(ip_ranges))
 
+def pairwise(iterable):
+	a, b = tee(iterable)
+	next(b, None)
+	return zip(a, b)
+
 
 def merge_overlaps(ip_ranges):
 	merged_ranges = []
@@ -30,6 +35,14 @@ def part_one(ip_ranges):
 	# return first item outside of the first merged range (i.e. first item not covered by any original range)
 	return merged_ranges[0][1] + 1
 
+def part_two(ip_ranges):
+	merged_ranges = merge_overlaps(ip_ranges)
+	num_allowed = merged_ranges[0][0]
+	for r1, r2 in pairwise(merged_ranges):
+		num_allowed += r2[0] - r1[1] - 1
+	return num_allowed
+
 
 ip_ranges = read_input()
 print(part_one(ip_ranges))
+print(part_two(ip_ranges))
