@@ -1,0 +1,4 @@
+*/.idea/*
+*/__pycache__/
+aoc-2017/__pycache__/
+testpad.py
