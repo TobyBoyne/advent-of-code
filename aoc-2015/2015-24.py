@@ -1,5 +1,4 @@
 from itertools import combinations
-import numpy as np
 from operator import mul
 from functools import reduce
 
@@ -11,8 +10,8 @@ def read_input():
 	return weights
 
 
-def part_one(weights):
-	target_weight = sum(weights) / 3
+def find_lowest_qe(weights, num_groups):
+	target_weight = sum(weights) / num_groups
 	for r in range(10):
 		qe_values = []
 		for ws in combinations(weights, r):
@@ -22,6 +21,13 @@ def part_one(weights):
 			break
 	return min(qe_values)
 
+def part_one(weights):
+	return find_lowest_qe(weights, num_groups=3)
+
+def part_two(weights):
+	return find_lowest_qe(weights, num_groups=4)
+
 
 weights = read_input()
 print(part_one(weights))
+print(part_two(weights))
