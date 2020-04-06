@@ -1,6 +1,7 @@
 import numpy as np
 from parse import parse
 
+
 class Op:
 	def __init__(self, args):
 		self.args = args
@@ -28,18 +29,13 @@ class RotateSteps(Op):
 
 class RotateBased(Op):
 	def __call__(self, arr, inverse=False):
+		idx = np.argwhere(arr == self.args[0])[0][0]
 		if not inverse:
-			idx = np.argwhere(arr == self.args[0])[0]
-			n = 1 + idx + (idx >= 4)
-			arr = np.roll(arr, n)
+			n = rotate_map[idx] - idx
 		else:
-			idx = np.argwhere(arr == self.args[0])[0][0]
-			i = 0
-			while not ((1 + idx == i) or ((2 + idx != i) and idx >= 4)):
-				arr = np.roll(arr, -1)
-				i += 1
-				idx = (idx - 1) % len(arr)
-				print(i, idx)
+			n = reverse_rotate_map[idx] - idx
+
+		arr = np.roll(arr, n)
 		return arr
 
 class Reverse(Op):
@@ -52,11 +48,13 @@ class Move(Op):
 	def __call__(self, arr, inverse=False):
 		if not inverse:
 			i, j = self.args
-			value = arr[i]
-			arr = np.delete(arr, i)
-			arr = np.insert(arr, j, value)
-			return arr
+		else:
+			j, i = self.args
 
+		value = arr[i]
+		arr = np.delete(arr, i)
+		arr = np.insert(arr, j, value)
+		return arr
 
 
 # unique word in string matches to a pattern for parse
@@ -69,6 +67,9 @@ patterns = {
 	"move":				(Move, "move position {:d} to position {:d}")
 }
 
+# dictionaries used to work out where a letter will end up after rotation
+rotate_map = {i: (2 * i + 1 + (i >= 4)) % 8 for i in range(8)}
+reverse_rotate_map = {v: k for k, v in rotate_map.items()}
 
 def read_input():
 	moves = []
@@ -82,17 +83,25 @@ def read_input():
 					moves.append(move)
 	return moves
 
-def scramble(moves, password):
+def scramble(moves, password, inverse=False):
 	arr = np.array([c for c in password])
+	if inverse:
+		moves = moves[::-1]
 	for move in moves:
-		arr = move(arr)
+		arr = move(arr, inverse)
 	return arr
 
 def part_one(moves, password):
 	scrambled_arr = scramble(moves, password)
 	return "".join(scrambled_arr)
 
+def part_two(moves, password):
+	scrambled_arr = scramble(moves, password, inverse=True)
+	return "".join(scrambled_arr)
+
 
 moves = read_input()
 password = "abcdefgh"
+scrambled_password = "fbgdceah"
 print(part_one(moves, password))
+print(part_two(moves, scrambled_password))
