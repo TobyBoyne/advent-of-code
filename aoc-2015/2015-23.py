@@ -6,9 +6,9 @@ def read_input():
 			instructions.append((op, args))
 	return instructions
 
-def run(instructions):
+def run(instructions, initial_registers):
 	i = 0
-	registers = {'a': 0, 'b': 0}
+	registers = initial_registers
 	while 0 <= i < len(instructions):
 		op, args = instructions[i]
 		if op == 'hlf':
@@ -30,8 +30,14 @@ def run(instructions):
 	return registers
 
 def part_one(instructions):
-	registers = run(instructions)
-	print(registers)
+	registers = run(instructions, {'a': 0, 'b': 0})
+	return registers['b']
+
+def part_two(instructions):
+	registers = run(instructions, {'a': 1, 'b': 0})
+	return registers['b']
+
 
 instructions = read_input()
 print(part_one(instructions))
+print(part_two(instructions))
