@@ -10,17 +10,17 @@ with open('day11.txt') as f:
 
 can_sit_arr = (seats == 'L').astype(np.int)
 
-# def run1(prev_occupied, can_sit_arr):
-# 	occupied = np.zeros_like(prev_occupied, dtype=int)
-# 	for (y, x), can_sit in np.ndenumerate(can_sit_arr):
-# 		if can_sit:
-# 			adj = prev_occupied[max(y-1, 0):y+2, max(x-1, 0):x+2]
-# 			if prev_occupied[y, x]:
-# 				occupied[y, x] = 0 if adj.sum() >= 5 else 1
-# 			else:
-# 				occupied[y, x] = 1 if adj.sum() == 0 else 0
-#
-# 	return occupied
+def run1(prev_occupied, can_sit_arr):
+	occupied = np.zeros_like(prev_occupied, dtype=int)
+	for (y, x), can_sit in np.ndenumerate(can_sit_arr):
+		if can_sit:
+			adj = prev_occupied[max(y-1, 0):y+2, max(x-1, 0):x+2]
+			if prev_occupied[y, x]:
+				occupied[y, x] = 0 if adj.sum() >= 5 else 1
+			else:
+				occupied[y, x] = 1 if adj.sum() == 0 else 0
+
+	return occupied
 
 # for y, row in enumerate(arr):
 # 	print(''.join('#' if c else 'L' if can_sit_arr[y, x] else '.' for x, c in enumerate(row)))
@@ -41,3 +41,13 @@ def part_two():
 
 print('Part one', part_one())
 print('Part two', part_two())
+
+from time import perf_counter
+start_time = perf_counter()
+print(reach_eq(run1))
+print(f'{(perf_counter()-start_time):.3f} s')
+
+
+start_time = perf_counter()
+print('Part one', part_one())
+print(f'{(perf_counter()-start_time):.3f} s')
